@@ -1,23 +1,27 @@
 package com.ecopla.ecopla.service;
 
-import com.ecopla.ecopla.model.Vender;
-import com.ecopla.ecopla.repository.VenderRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+
+import com.ecopla.ecopla.model.Vender;
+import com.ecopla.ecopla.repository.VenderRepository;
 
 @ExtendWith(MockitoExtension.class)
 class VenderServiceTest {
@@ -83,14 +87,17 @@ class VenderServiceTest {
 
     @Test
     void atualizar_ShouldUpdateExistingVenda() {
-        when(repo.existsById("1")).thenReturn(true);
-        when(repo.save(any(Vender.class))).thenReturn(venda1);
-        
-        Vender updated = service.atualizar("1", venda1);
-        
-        assertEquals("1", updated.getId());
-        verify(repo, times(1)).existsById("1");
-        verify(repo, times(1)).save(venda1);
+        // Arrange
+        Vender updatedVenda = new Vender("1", "user1", "reciclavel", 600, "verde");
+        when(repo.save(any(Vender.class))).thenReturn(updatedVenda);
+
+        // Act
+        Vender result = service.atualizar("1", updatedVenda);
+
+        // Assert
+        assertEquals(600, result.getQuantidade());
+        verify(repo, times(1)).save(any(Vender.class));
+
     }
 
     @Test

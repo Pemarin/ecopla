@@ -1,21 +1,25 @@
 package com.ecopla.ecopla.service;
 
-import com.ecopla.ecopla.model.Arquivo;
-import com.ecopla.ecopla.repository.ArquivoRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ecopla.ecopla.model.Arquivo;
+import com.ecopla.ecopla.repository.ArquivoRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ArquivoServiceTest {
@@ -91,8 +95,7 @@ class ArquivoServiceTest {
 
     @Test
     void salvarArquivo_ShouldSaveAndReturnFile() throws IOException {
-        // Arrange
-        when(file.getOriginalFilename()).thenReturn("model.stl");
+        // Arrange - Only mock what will actually be used in the test
         when(repository.save(any(Arquivo.class))).thenAnswer(inv -> {
             Arquivo a = inv.getArgument(0);
             a.setId("3");
